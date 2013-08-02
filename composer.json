@@ -1,0 +1,22 @@
+{
+	"name": "frosty22/ale",
+	"type": "library",
+	"description": "Core of all Ale components.",
+	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
+	"authors": [
+		{
+			"name": "Vít Ledvinka",
+			"homepage": "http://www.frosty22.cz"
+		}
+	],
+	"require": {
+		"php": ">= 5.2.0",
+		"nette/nette": "2.*",
+		"kdyby/doctrine": "*"
+	},
+	"autoload": {
+		"psr-0": {
+			"Ale" : "src/"
+		}
+	}
+}
