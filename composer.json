@@ -17,6 +17,10 @@
 	"autoload": {
 		"psr-0": {
 			"Ale" : "src/"
-		}
+		},
+		"classmap": [
+			"src/Kdyby/Autowired/exceptions.php",
+			"src/Ale/exceptions.php"
+		]
 	}
 }
