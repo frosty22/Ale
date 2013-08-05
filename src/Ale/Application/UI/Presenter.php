@@ -23,6 +23,24 @@ use Nette\Utils\Strings;
 abstract class Presenter extends \Nette\Application\UI\Presenter {
 
 
+
+	/**
+	 * Redirect to URL with POST params.
+	 * @param string $url
+	 * @param array $getParams
+	 * @param array $postParams
+	 * @param null|int $code
+	 */
+	protected function redirectUrlPost($url, array $getParams = array(), array $postParams = array(), $code = NULL)
+	{
+		if (!$code) {
+			$code = \Nette\Http\IResponse::S303_POST_GET;
+		}
+		$this->sendResponse(new \Ale\Application\Responses\RedirectPostResponse($url, $getParams, $postParams, $code));
+	}
+
+
+
 	/*******************************************************************************************************************/
 	/**
 	 * Extended for support of action*, render* and handle* methods with objects
