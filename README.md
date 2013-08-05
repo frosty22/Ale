@@ -19,9 +19,66 @@ Základní entity
 Knihovna obsahuje 3 základní entity (BaseEntity, IdentifiedEntity, NamedEntity), od BaseEntity by měli dědit všechny entity aplikace (IdentifiedEntity a NamedEntity dědí též) a jedná se o základní entitu, která zapouzdřuje funkčnost z Kdyby/Doctrine, a používá se při práci s ostatními knihovnami (například DataExt, EntityMetaReader, a další).
 
 
-IPresenterProvider
+Ale\DI\IPresenterProvider
 ------------------
 
 Rozhraní IPresenterProvider mohou dědit rozšíření DI, a slouží k mapování presenterů, které mohou obsahovat jednotlivé moduly - viz inspirace http://forum.nette.org/en/1193-extending-extensions-solid-modular-concept
 
 Z důvodu kompatibility se stable verzí Nette, která v tuto chvíli nepodporuje mapování presenterů, je zde obsažen i vlastní PresenterFactory, který je upravenou kopií z dev verze Nette.
+
+
+Ale\Application\UI\Presenter
+----------------------------
+
+Objekt rozšiřující možnosti Nette presenteru, může být použit jako základní presenter pro všechny Vaše presentery. Tento presenter přidává následující funkční celky:
+
+- Autowiring služeb namísto používání inject* metod, viz https://github.com/Kdyby/Autowired/blob/master/src/Kdyby/Autowired/AutowireProperties.php
+
+- Autowiring továrniček viz https://github.com/Kdyby/Autowired/blob/master/src/Kdyby/Autowired/AutowireComponentFactories.php
+
+- Přijímání entit v action http://forum.nette.org/cs/13568-router-vracia-objekty-entity-namiesto-skalarov#p102228
+
+
+```php
+class TestPresenter extends Ale\Application\UI\Presenter
+{
+
+	/**
+	 * @autowire
+	 * @var Foo
+	 */
+	public $foo;
+
+
+    public function actionDefault(User $user, Shop $shop = NULL)
+    {
+        // příklad získání dané entity pomocí primárního klíče
+        // Například {plink Test:default, user => 1, shop => 2}
+        var_dump($user); // Entita User s id 1
+        var_dump($shop); // Entita Shop s id 2
+    }
+
+
+    public function renderDefault(User $user)
+    {
+        ...
+    }
+
+
+    public function renderDefault(User $user)
+    {
+        ...
+    }
+
+
+    /**
+      * @return GridoExt\Grido
+      */
+    protected function createComponentDatagrid($name, IGridoFactory $factory)
+    {
+    	return $factory->create();
+    }
+
+}
+
+```
