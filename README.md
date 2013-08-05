@@ -82,3 +82,13 @@ class TestPresenter extends Ale\Application\UI\Presenter
 }
 
 ```
+
+
+Reponses
+--------
+
+V knihovně jsou obsaženy nové typy odpovědí server:
+
+- ImageResponse - slouží k odeslání obrázku, využitelné například pro QR kódy apod.
+- RedirectPostResponse - odeslání POST dat na danou URL adresu - funguje tak, že vrátí uživateli stránku s vygenerovaným formulářem, a danými POST daty (ve skrytých inputech), a automaticky pomocí JS (či kliknutím na vygenerované tlačítko) odešle tyto elementy na danou URL.
+- JsonpResponse - odpověď pro JSONP požadavky
