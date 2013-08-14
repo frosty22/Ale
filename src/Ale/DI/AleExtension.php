@@ -22,13 +22,19 @@ class AleExtension extends CompilerExtension
 	public function loadConfiguration()
 	{
 		$builder = $this->getContainerBuilder();
+		$config = $this->getConfig();
 
 		// Changed default nette presenter factory
 		$builder->removeDefinition("nette.presenterFactory");
-		$builder->addDefinition("nette.presenterFactory")
+		$presenterFactory = $builder->addDefinition("nette.presenterFactory")
 			->setClass('Ale\Application\PresenterFactory', array('%appDir%'))
 			->setAutowired(TRUE)
 			->setShared(TRUE);
+
+		if (isset($config["mapping"])) {
+			\Nette\Utils\Validators::assertField($config, 'mapping', 'array');
+			$presenterFactory->addSetup("setMapping", array($config["mapping"]));
+		}
 
 	}
 
