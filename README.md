@@ -13,6 +13,22 @@ Instalace
 > Pokud nevíte jakým způsobem připojit rošíření, dopoučuji použít rošíření https://github.com/vojtech-dobes/nette-extensions-list, které umožňuje následně v konfiguračním souboru definovat sekci "extensions", kde pak lze jednoduše přidat toto rošíření. Alternativně je nutné v boostrapu v události onCompile na Configuration zavěsit callback, který bude přidávat všechna Vaše rožšíření pomocí volání metody addExtension na Compiler.
 
 
+Konfigurace
+-----------
+
+Konfigurace extension v NEONu:
+
+```yaml
+
+	ale:
+		mapping:
+			*: App\*Module\*Presenter
+
+```
+
+- **mapping** nastavení mapování pro PresenterFactory
+
+
 Základní entity
 ---------------
 
