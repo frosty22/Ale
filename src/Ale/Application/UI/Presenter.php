@@ -58,8 +58,9 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 
 	/**
 	 * Calls public method if exists.
-	 * @param  string
-	 * @param  array
+	 * @param string $method
+	 * @param array $params
+	 * @throws \Nette\Application\BadRequestException
 	 * @return bool  does method exist?
 	 */
 	protected function tryCall($method, array $params)
@@ -375,10 +376,10 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 	}
 
 
-
 	/**
 	 * @param \Nette\DI\Container $dic
 	 * @throws \Kdyby\Autowired\MemberAccessException
+	 * @throws \Kdyby\Autowired\MissingServiceException
 	 * @internal
 	 */
 	public function injectComponentFactories(\Nette\DI\Container $dic)

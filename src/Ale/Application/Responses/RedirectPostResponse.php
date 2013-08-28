@@ -121,6 +121,8 @@ class RedirectPostResponse extends \Nette\Object implements \Nette\Application\I
 
 	/**
 	 * Sends response to output.
+	 * @param \Nette\Http\IRequest $httpRequest
+	 * @param \Nette\Http\IResponse $httpResponse
 	 * @return void
 	 */
 	public function send(Http\IRequest $httpRequest, Http\IResponse $httpResponse)
