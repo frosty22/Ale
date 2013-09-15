@@ -5,17 +5,17 @@ namespace Ale;
 abstract class Exception extends \Exception {  }
 
 /** Abstract base exceptions */
-abstract class RuntimeException extends \App\Exception {  }
-abstract class LogicException extends \App\Exception {  }
+abstract class RuntimeException extends Exception {  }
+abstract class LogicException extends Exception {  }
 
 /** Runtime exceptions */
-class RelationFoundException extends \App\RuntimeException { }
-class OutOfBoundsException extends \App\RuntimeException { }
-class BadRequestException extends \App\RuntimeException { }
-class NotFoundException extends \App\RuntimeException { }
-class InvalidStateException extends  \App\RuntimeException { }
-class UnexpectedValueException extends \App\RuntimeException {  }
-class DuplicateEntryException extends \App\RuntimeException {
+class RelationFoundException extends RuntimeException { }
+class OutOfBoundsException extends RuntimeException { }
+class BadRequestException extends RuntimeException { }
+class NotFoundException extends RuntimeException { }
+class InvalidStateException extends  RuntimeException { }
+class UnexpectedValueException extends RuntimeException {  }
+class DuplicateEntryException extends RuntimeException {
 	public $value;
 	public $property;
 	public function __construct($property, $value) {
@@ -25,11 +25,11 @@ class DuplicateEntryException extends \App\RuntimeException {
 }
 
 /** Logic exceptions */
-class InvalidArgumentException extends \App\LogicException { }
-class ExceptedAnnotationException extends \App\LogicException { }
-class InvalidPropertyException extends \App\LogicException {  }
-class NotImplementException extends \App\LogicException {  }
-class InvalidCallException extends \App\LogicException { }
-class MissingClassException extends \App\LogicException { }
-class MemberAccessException extends \App\LogicException { }
-class MissingServiceException extends \App\LogicException {  }
+class InvalidArgumentException extends LogicException { }
+class ExceptedAnnotationException extends LogicException { }
+class InvalidPropertyException extends LogicException {  }
+class NotImplementException extends LogicException {  }
+class InvalidCallException extends LogicException { }
+class MissingClassException extends LogicException { }
+class MemberAccessException extends LogicException { }
+class MissingServiceException extends LogicException {  }
