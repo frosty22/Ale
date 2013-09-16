@@ -30,7 +30,7 @@ abstract class Control extends Nette\Application\UI\Control
 	{
 		/** @var \Nette\Templating\FileTemplate|\stdClass $template */
 		$template = parent::createTemplate($class);
-		$template->registerHelperLoader(callback($this->presenter->context->templateHelpers, "loader"));
+		$template->registerHelperLoader(callback($this->presenter->context->getByType('Ale\TemplateHelpers'), "loader"));
 
 		if ($file = $this->getTemplateDefaultFile()) {
 			$template->setFile($file);
