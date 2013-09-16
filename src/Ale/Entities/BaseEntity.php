@@ -16,4 +16,13 @@ use Doctrine\ORM\Mapping as ORM;
 abstract class BaseEntity extends \Kdyby\Doctrine\Entities\BaseEntity
 {
 
+
+	/**
+	 * @return array
+	 */
+	public function getListProperties()
+	{
+		return get_object_vars($this);
+	}
+
 }
