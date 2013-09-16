@@ -30,6 +30,9 @@ class AleExtension extends CompilerExtension
 
 		$builder->addDefinition($this->prefix('templateHelpers'))
 			->setClass('Ale\TemplateHelpers');
+
+		$builder->addDefinition($this->prefix('daoFactory'))
+			->setClass('Ale\DaoFactory');
 	}
 
 
