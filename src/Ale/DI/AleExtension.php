@@ -21,11 +21,15 @@ class AleExtension extends CompilerExtension
 	 */
 	public function loadConfiguration()
 	{
+		$builder = $this->getContainerBuilder();
+
 		if (isset($this->config["nette"]["application"]["mapping"])) {
-			$builder = $this->getContainerBuilder();
 			$builder->getDefinition("nette.presenterFactory")
 				->addSetup('setMapping', array($this->config["nette"]["application"]["mapping"]));
 		}
+
+		$builder->addDefinition($this->prefix('templateHelpers'))
+			->setClass('Ale\TemplateHelpers');
 	}
 
 
