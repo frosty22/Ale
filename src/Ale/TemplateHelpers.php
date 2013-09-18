@@ -22,12 +22,24 @@ class TemplateHelpers extends \Nette\Object
 	/**
 	 * Add helper.
 	 * @param string $name Name of helper
-	 * @param callback $callback
+	 * @param object|callbakc $service
 	 */
-	public function addHelper($name, \Nette\Callback $callback)
+	public function addHelper($name, $service)
 	{
-		if (!$callback->isCallable())
-			throw new \Nette\InvalidArgumentException("Callback of helper '$name' is not callable.");
+		if (!is_callable($service)) {
+
+			if (!is_object($service))
+				throw new InvalidArgumentException('Property must be service or callback,
+							but "' . gettype($service) . '" given.');
+
+			if (!method_exists($service, 'helper'))
+				throw new InvalidArgumentException('Service ' . gettype($service) . ' doesnt have method "helper".');
+
+			$callback = array($service, 'helper');
+		} else {
+			$callback = $service;
+		}
+
 		$name = strtolower($name);
 		$this->helpers[$name] = $callback;
 	}

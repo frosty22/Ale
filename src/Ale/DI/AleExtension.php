@@ -17,10 +17,19 @@ class AleExtension extends CompilerExtension
 
 
 	/**
+	 * @var array
+	 */
+	private $defaults = array(
+		'helpers' => array()
+	);
+
+
+	/**
 	 * Base configuration
 	 */
 	public function loadConfiguration()
 	{
+		$config = $this->getConfig($this->defaults);
 		$builder = $this->getContainerBuilder();
 
 		if (isset($this->config["nette"]["application"]["mapping"])) {
@@ -28,8 +37,11 @@ class AleExtension extends CompilerExtension
 				->addSetup('setMapping', array($this->config["nette"]["application"]["mapping"]));
 		}
 
-		$builder->addDefinition($this->prefix('templateHelpers'))
+		$templateHelpers = $builder->addDefinition($this->prefix('templateHelpers'))
 			->setClass('Ale\TemplateHelpers');
+
+		foreach ($config['helpers'] as $name => $helper)
+			$templateHelpers->addSetup('addHelper', array($name, $helper));
 
 		$builder->addDefinition($this->prefix('daoFactory'))
 			->setClass('Ale\DaoFactory');

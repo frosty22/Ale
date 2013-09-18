@@ -40,6 +40,18 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 	}
 
 
+	/**
+	 * @param string $class
+	 * @return \Nette\Templating\ITemplate
+	 */
+	protected function createTemplate($class = NULL)
+	{
+		/** @var \Nette\Templating\FileTemplate|\stdClass $template */
+		$template = parent::createTemplate($class);
+		$template->registerHelperLoader(callback($this->presenter->context->getByType('Ale\TemplateHelpers'), "loader"));
+		return $template;
+	}
+
 
 	/*******************************************************************************************************************/
 	/**
