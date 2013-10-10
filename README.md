@@ -94,7 +94,7 @@ class TestPresenter extends Ale\Application\UI\Presenter
 ```
 
 
-Autowiring repozitářů v modelech
+Autowiring DAO v modelech
 --------------------------------
 
 Používáte-li často techniku, kdy si předáváte \Kdyby\Doctrine\EntityDao do modelů, tak jistě v konfigu používáte továrničku @dao.doctrine(Nejaka\Moje\Entita). Mě tohle moc nebaví, zvláště, když předávám například už 3 repozitáře v ten řádek konfigu se mi nafoukne. Ve finále je to skoro jediné, co se musí definovat, jinak autowiring se postará o vše ostatní.
@@ -106,7 +106,7 @@ Tohle jsem nakonec vyřešil s tím, že v anotaci služby si definujete název 
 class MojeSluzba {
 
 	/**
-	 * @var EntityDao Nejaka\Moje\Entita
+	 * @var EntityDao $dao Nejaka\Moje\Entita
 	 */
 	public function __constructor($dao)
 	{
