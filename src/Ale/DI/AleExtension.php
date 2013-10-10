@@ -64,19 +64,18 @@ class AleExtension extends CompilerExtension
 	/**
 	 * Browse methods for autowire
 	 * @param ServiceDefinition $definition
-	 * @return bool
 	 */
 	protected function extendAutowire(ServiceDefinition $definition)
 	{
 		if (!$definition->autowired || !$definition->class)
-			return FALSE;
+			return;
 
 		$reflection = new \Nette\Reflection\ClassType($definition->class);
 		if ($method = $reflection->getConstructor()) {
-			return $this->autowireParams($definition, $method);
+			$this->autowireParams($definition, $method);
 		}
 
-		return FALSE;
+		return;
 	}
 
 
