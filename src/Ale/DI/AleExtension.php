@@ -67,10 +67,20 @@ class AleExtension extends CompilerExtension
 	 */
 	protected function extendAutowire(ServiceDefinition $definition)
 	{
-		if (!$definition->autowired || !$definition->class)
+		if (!$definition->autowired)
 			return;
 
-		$reflection = new \Nette\Reflection\ClassType($definition->class);
+		if ($definition->class)
+			$reflection = new \Nette\Reflection\ClassType($definition->class);
+		elseif ($definition->factory) {
+			try {
+				$reflection = new \Nette\Reflection\ClassType($definition->factory->entity);
+			} catch (\ReflectionException $e) {
+				return;
+			}
+		} else
+			return;
+
 		if ($method = $reflection->getConstructor()) {
 			$this->autowireParams($definition, $method);
 		}
@@ -92,7 +102,12 @@ class AleExtension extends CompilerExtension
 			if ($targetClass = $param->getClass()) {
 				if ($targetClass->getName() === 'Kdyby\Doctrine\EntityDao' && !isset($definition->factory->arguments[$num])) {
 					$annotations = $method->getAnnotations();
-					$entity = $this->getEntityName($definition, $param, $annotations);
+					$entity = $this->getEntityName($param, $annotations);
+
+					if ($definition->factory === NULL) {
+						$definition->setFactory($definition->class);
+					}
+
 					$definition->factory->arguments[$num] = new \Nette\DI\Statement('@doctrine.dao', array($entity));
 				}
 			}
@@ -102,17 +117,18 @@ class AleExtension extends CompilerExtension
 
 	/**
 	 * Get required entity name from annotation
-	 * @param ServiceDefinition $definition
 	 * @param \Nette\Reflection\Parameter $param
 	 * @param array $annotations
 	 * @return string
 	 * @throws \Ale\ExceptedAnnotationException
 	 */
-	protected function getEntityName(ServiceDefinition $definition, \Nette\Reflection\Parameter $param, array $annotations)
+	protected function getEntityName(\Nette\Reflection\Parameter $param, array $annotations)
 	{
+		$class = $param->declaringClass;
+
 		if (!isset($annotations["param"]))
 			throw new \Ale\ExceptedAnnotationException("Annotation @param is excepted in class
-						 " . $definition->class . " for support of autowire EntityDao.");
+						 " . $class->name . " for support of autowire EntityDao.");
 
 		$entity = NULL;
 		foreach ($annotations["param"] as $annotation) {
@@ -123,10 +139,24 @@ class AleExtension extends CompilerExtension
 
 		if (!$entity)
 			throw new \Ale\ExceptedAnnotationException('Excepted annotation "@param EntityDao
-									$' . $param->name . ' EntityName" in ' . $definition->class . ' but not found.');
+									$' . $param->name . ' EntityName" in ' . $class->name . ' but not found.');
+
+		if (!$this->checkEntity($entity))
+			throw new \Ale\ExceptedAnnotationException('Defined entity in ' . $class->name . ' at param $' . $param->name . ' named
+									"' . $entity . '" doesnt exists.');
 
 		return $entity;
 	}
 
+
+	/**
+	 * Check if entity exist
+	 * @param string $entity
+	 * @return bool
+	 */
+	protected function checkEntity($entity)
+	{
+		return class_exists($entity);
+	}
 
 }
