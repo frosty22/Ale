@@ -37,6 +37,8 @@ Objekt rozšiřující možnosti Nette presenteru, může být použit jako zák
 
 - Autowiring továrniček viz https://github.com/Kdyby/Autowired/blob/master/src/Kdyby/Autowired/AutowireComponentFactories.php
 
+- Autowiring repozitářů skrz továrničku
+
 - Přijímání entit v action http://forum.nette.org/cs/13568-router-vracia-objekty-entity-namiesto-skalarov#p102228
 
 
@@ -49,6 +51,13 @@ class TestPresenter extends Ale\Application\UI\Presenter
 	 * @var Foo
 	 */
 	public $foo;
+
+
+	/**
+	 * @autowire(factory="Ale\DaoFactory", \App\User)
+	 * @var \Kdyby\Doctrine\EntityDao
+	 */
+	public $userRepository;
 
 
     public function actionDefault(User $user, Shop $shop = NULL)
@@ -82,6 +91,30 @@ class TestPresenter extends Ale\Application\UI\Presenter
 
 }
 
+```
+
+
+Autowiring repozitářů v modelech
+--------------------------------
+
+Používáte-li často techniku, kdy si předáváte \Kdyby\Doctrine\EntityDao do modelů, tak jistě v konfigu používáte továrničku @dao.doctrine(Nejaka\Moje\Entita). Mě tohle moc nebaví, zvláště, když předávám například už 3 repozitáře v ten řádek konfigu se mi nafoukne. Ve finále je to skoro jediné, co se musí definovat, jinak autowiring se postará o vše ostatní.
+
+Tohle jsem nakonec vyřešil s tím, že v anotaci služby si definujete název té entity a rozšířený autowiring se postará o ostatní, například:
+
+
+```php
+class MojeSluzba {
+
+	/**
+	 * @var EntityDao Nejaka\Moje\Entita
+	 */
+	public function __constructor($dao)
+	{
+	  ...
+	}
+
+
+}
 ```
 
 
