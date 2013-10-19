@@ -14,7 +14,8 @@
 		"nette/nette": "2.*",
 		"kdyby/doctrine": "*",
 		"flame/modules": "*",
-		"kdyby/bootstrap-form-renderer": "@stable"
+		"kdyby/bootstrap-form-renderer": "@stable",
+		"voda/date-input": "1.0.*"
 	},
 	"autoload": {
 		"psr-0": {

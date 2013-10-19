@@ -41,11 +41,22 @@ class AleExtension extends CompilerExtension
 		$templateHelpers = $builder->addDefinition($this->prefix('templateHelpers'))
 			->setClass('Ale\TemplateHelpers');
 
-		foreach ($config['helpers'] as $name => $helper)
+		foreach ($config['helpers'] as $name => $obj) {
+
+			$helper = $builder->addDefinition($this->prefix("helper." . $name))
+				->setClass($obj->value, $obj->attributes);
+
 			$templateHelpers->addSetup('addHelper', array($name, $helper));
+		}
 
 		$builder->addDefinition($this->prefix('daoFactory'))
 			->setClass('Ale\DaoFactory');
+
+		$builder->addDefinition($this->prefix('formDataFetcher'))
+			->setClass('Ale\Forms\DataFetcher');
+
+		$builder->addDefinition($this->prefix('formFactory'))
+			->setClass('Ale\Forms\FormFactory');
 	}
 
 

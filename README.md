@@ -20,6 +20,21 @@ Knihovna vyžaduje balíček Flame/modules, který je nutné mít správně nain
 https://github.com/flame-org/Modules.
 
 
+CSS & JavaScript
+----------------
+
+```php
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+	<script type='text/javascript' src="{$basePath}/js/nette.js"></script>
+	<script type='text/javascript' src="{$basePath}/js/jquery-ui-timepicker-addon.min.js"></script>
+	<script type='text/javascript' src="{$basePath}/js/dateInput.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/jquery-ui-timepicker-addon.min.css">
+	<link rel="stylesheet" type="text/css" href="{$basePath}/css/dateInput.css">
+```
+
 
 Základní entity
 ---------------
