@@ -60,5 +60,19 @@ class Form extends \Nette\Application\UI\Form {
 	}
 
 
+	/**
+	 * @param string $message
+	 * @param array $args
+	 */
+	public function addError($message, $args = array())
+	{
+		// Hack for translator - and key string like "foo.bar"
+		if ($this->translator && \Nette\Utils\Strings::match($message, '~[a-z\.]~i')) {
+			$message = $this->translator->translate($message, $args);
+		}
+		return parent::addError($message);
+	}
+
+
 
 }
