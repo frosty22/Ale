@@ -15,7 +15,8 @@
 		"kdyby/doctrine": "*",
 		"flame/modules": "*",
 		"kdyby/bootstrap-form-renderer": "@stable",
-		"voda/date-input": "1.0.*"
+		"voda/date-input": "1.0.*",
+		"frosty22/entity-meta-reader": "*"
 	},
 	"autoload": {
 		"psr-0": {
