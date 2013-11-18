@@ -43,6 +43,7 @@ class FormFactory extends \Nette\Object {
 		$this->user = $user;
 		$this->fetcher = $fetcher;
 
+		\Kdyby\Replicator\Container::register();
 		\Vodacek\Forms\Controls\DateInput::register();
 	}
 

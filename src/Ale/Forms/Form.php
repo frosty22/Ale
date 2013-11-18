@@ -12,6 +12,7 @@ use Vodacek\Forms\Controls\DateInput;
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
  *
  * @method DateInput addDate(string $name, string $label, string $type)
+ * @method \Kdyby\Replicator\Container addDynamic(string $name, callback $callback)
  *
  */
 class Form extends \Ale\Application\UI\Form {

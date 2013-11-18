@@ -70,7 +70,7 @@ class Form extends \Nette\Application\UI\Form {
 		if ($this->translator && \Nette\Utils\Strings::match($message, '~^[a-z\.]+$~i')) {
 			$message = $this->translator->translate($message, $args);
 		}
-		return parent::addError($message);
+		parent::addError($message);
 	}
 
 
