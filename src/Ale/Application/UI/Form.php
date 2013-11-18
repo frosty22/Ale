@@ -68,7 +68,7 @@ class Form extends \Nette\Application\UI\Form {
 	{
 		// Hack for translator - and key string like "foo.bar"
 		if ($this->translator && \Nette\Utils\Strings::match($message, '~^[a-z\.]+$~i')) {
-			$message = $this->translator->translate($message, $args);
+			$message = $this->translator->translate($message, NULL, $args);
 		}
 		parent::addError($message);
 	}
