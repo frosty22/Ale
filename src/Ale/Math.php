@@ -22,6 +22,7 @@ class Math {
 	 */
 	public static function getPercentFromPart($amount, $all, $precision = 0)
 	{
+		if ($all === 0) return 0;
 		return round($amount / self::getOnePercent($all), $precision);
 	}
 
