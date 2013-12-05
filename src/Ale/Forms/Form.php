@@ -4,6 +4,7 @@ namespace Ale\Forms;
 
 use Ale\Entities\BaseEntity;
 use EntityMetaReader\EntityReader;
+use Nette\ComponentModel\IComponent;
 use Vodacek\Forms\Controls\DateInput;
 
 /**
@@ -214,6 +215,18 @@ class Form extends \Ale\Application\UI\Form {
 	}
 
 
+	/**
+	 * Merge forms
+	 * @param Form $form
+	 */
+	public function merge(\Ale\Forms\Form $form)
+	{
+		foreach ($form->getComponents() as $name => $component) {
+			/** @var IComponent $component */
+			$component->setParent(NULL);
+			$this->addComponent($component, $name);
+		}
+	}
 
 
 }
