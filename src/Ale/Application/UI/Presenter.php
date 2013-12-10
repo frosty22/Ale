@@ -165,8 +165,10 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 
 		$this->autowirePropertiesLocator = $dic;
 		$cache = new \Nette\Caching\Cache($dic->getByType('Nette\Caching\IStorage'), 'Kdyby.Autowired.AutowireProperties');
+		$containerFileName = ClassType::from($this->autowirePropertiesLocator)->getFileName();
+		$cacheKey = array($presenterClass = get_class($this), $containerFileName);
 
-		if (is_array($this->autowireProperties = $cache->load($presenterClass = get_class($this)))) {
+		if (is_array($this->autowireProperties = $cache->load($cacheKey))) {
 			foreach ($this->autowireProperties as $propName => $tmp) {
 				unset($this->{$propName});
 			}
@@ -187,12 +189,12 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 		}
 
 		$files = array_map(function ($class) {
-			return ClassType::from($class)->getFileName();
+			return \Nette\Reflection\ClassType::from($class)->getFileName();
 		}, array_diff(array_values(class_parents($presenterClass) + array('me' => $presenterClass)), $ignore));
 
-		$files[] = ClassType::from($this->autowirePropertiesLocator)->getFileName();
+		$files[] = $containerFileName;
 
-		$cache->save($presenterClass, $this->autowireProperties, array(
+		$cache->save($cacheKey, $this->autowireProperties, array(
 			$cache::FILES => $files,
 		));
 	}
@@ -206,16 +208,16 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 		}
 
 		foreach ($property->getAnnotations() as $name => $value) {
-			if (!in_array(Strings::lower($name), array('autowire', 'autowired'), TRUE)) {
+			if (!in_array(\Nette\Utils\Strings::lower($name), array('autowire', 'autowired'), TRUE)) {
 				continue;
 			}
 
-			if (Strings::lower($name) !== $name || $name !== 'autowire') {
-				throw new \Kdyby\Autowired\UnexpectedValueException("Annotation @$name on $property should be fixed to lowercase @autowire.");
+			if (\Nette\Utils\Strings::lower($name) !== $name || $name !== 'autowire') {
+				throw new \Kdyby\Autowired\UnexpectedValueException("Annotation @$name on $property should be fixed to lowercase @autowire.", $property);
 			}
 
 			if ($property->isPrivate()) {
-				throw new \Kdyby\Autowired\MemberAccessException("Autowired properties must be protected or public. Please fix visibility of $property or remove the @autowire annotation.");
+				throw new \Kdyby\Autowired\MemberAccessException("Autowired properties must be protected or public. Please fix visibility of $property or remove the @autowire annotation.", $property);
 			}
 
 			return TRUE;
@@ -264,13 +266,13 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 			$factoryType = $this->resolveAnnotationClass($prop, $args['factory'], 'autowire');
 
 			if (!$this->findByTypeForProperty($factoryType)) {
-				throw new \Kdyby\Autowired\MissingServiceException("Factory of type \"$factoryType\" not found for $prop in annotation @autowire.");
+				throw new \Kdyby\Autowired\MissingServiceException("Factory of type \"$factoryType\" not found for $prop in annotation @autowire.", $prop);
 			}
 
-			$factoryMethod = Method::from($factoryType, 'create');
+			$factoryMethod = \Nette\Reflection\Method::from($factoryType, 'create');
 			$createsType = $this->resolveAnnotationClass($factoryMethod, $factoryMethod->getAnnotation('return'), 'return');
 			if ($createsType !== $type) {
-				throw new \Kdyby\Autowired\UnexpectedValueException("The property $prop requires $type, but factory of type $factoryType, that creates $createsType was provided.");
+				throw new \Kdyby\Autowired\UnexpectedValueException("The property $prop requires $type, but factory of type $factoryType, that creates $createsType was provided.", $prop);
 			}
 
 			unset($args['factory']);
@@ -278,7 +280,7 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 			$metadata['factory'] = $this->findByTypeForProperty($factoryType);
 
 		} elseif (!$this->findByTypeForProperty($type)) {
-			throw new \Kdyby\Autowired\MissingServiceException("Service of type \"$type\" not found for $prop in annotation @var.");
+			throw new \Kdyby\Autowired\MissingServiceException("Service of type \"$type\" not found for $prop in annotation @var.", $prop);
 		}
 
 		// unset property to pass control to __set() and __get()
@@ -293,20 +295,20 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 		/** @var Property|Method $prop */
 
 		if (!$type = ltrim($annotationValue, '\\')) {
-			throw new \Kdyby\Autowired\InvalidStateException("Missing annotation @{$annotationName} with typehint on {$prop}.");
+			throw new \Kdyby\Autowired\InvalidStateException("Missing annotation @{$annotationName} with typehint on {$prop}.", $prop);
 		}
 
 		if (!class_exists($type) && !interface_exists($type)) {
 			if (substr(func_get_arg(1), 0, 1) === '\\') {
-				throw new \Kdyby\Autowired\MissingClassException("Class \"$type\" was not found, please check the typehint on {$prop} in annotation @{$annotationName}.");
+				throw new \Kdyby\Autowired\MissingClassException("Class \"$type\" was not found, please check the typehint on {$prop} in annotation @{$annotationName}.", $prop);
 			}
 
 			if (!class_exists($type = $prop->getDeclaringClass()->getNamespaceName() . '\\' . $type) && !interface_exists($type)) {
-				throw new \Kdyby\Autowired\MissingClassException("Neither class \"" . func_get_arg(1) . "\" or \"{$type}\" was found, please check the typehint on {$prop} in annotation @{$annotationName}.");
+				throw new \Kdyby\Autowired\MissingClassException("Neither class \"" . func_get_arg(1) . "\" or \"{$type}\" was found, please check the typehint on {$prop} in annotation @{$annotationName}.", $prop);
 			}
 		}
 
-		return ClassType::from($type)->getName();
+		return \Nette\Reflection\ClassType::from($type)->getName();
 	}
 
 
@@ -360,12 +362,14 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 
 
 
+
 	/*******************************************************************************************************************/
 	/**
 	 * Autowire component factories.
 	 * Included instead of traits for support < PHP 5.4
 	 * @link https://github.com/Kdyby/Autowired/blob/master/src/Kdyby/Autowired/AutowireComponentFactories.php
 	 */
+
 
 
 	/**
@@ -388,10 +392,10 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 	}
 
 
+
 	/**
 	 * @param \Nette\DI\Container $dic
 	 * @throws \Kdyby\Autowired\MemberAccessException
-	 * @throws \Kdyby\Autowired\MissingServiceException
 	 * @internal
 	 */
 	public function injectComponentFactories(\Nette\DI\Container $dic)
@@ -427,10 +431,10 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 		}
 
 		$files = array_map(function ($class) {
-			return ClassType::from($class)->getFileName();
+			return \Nette\Reflection\ClassType::from($class)->getFileName();
 		}, array_diff(array_values(class_parents($presenterClass) + array('me' => $presenterClass)), $ignore));
 
-		$files[] = ClassType::from($this->autowireComponentFactoriesLocator)->getFileName();
+		$files[] = \Nette\Reflection\ClassType::from($this->autowireComponentFactoriesLocator)->getFileName();
 
 		$cache->save($presenterClass, TRUE, array(
 			$cache::FILES => $files,
@@ -465,7 +469,7 @@ abstract class Presenter extends \Nette\Application\UI\Presenter {
 	 * @return \Nette\ComponentModel\IComponent
 	 * @throws \Nette\UnexpectedValueException
 	 */
-	public function createComponent($name)
+	protected function createComponent($name)
 	{
 		$sl = $this->getComponentFactoriesLocator();
 
