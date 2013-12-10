@@ -45,9 +45,7 @@ class Math {
 	 */
 	public static function sum()
 	{
-		$sum = 0;
-		foreach (func_get_args() as $value) $sum += $value;
-		return $sum;
+		return array_sum(func_get_args());
 	}
 
 
