@@ -17,7 +17,8 @@
 		"kdyby/bootstrap-form-renderer": "@stable",
 		"voda/date-input": "1.0.*",
 		"frosty22/entity-meta-reader": "*",
-		"kdyby/forms-replicator": "@stable"
+		"kdyby/forms-replicator": "@stable",
+		"kdyby/autowired": "@stable"
 	},
 	"autoload": {
 		"psr-0": {
