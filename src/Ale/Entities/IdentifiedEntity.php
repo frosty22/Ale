@@ -3,12 +3,14 @@
 namespace Ale\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Proxy\Proxy;
 
 /**
  * Identified entities.
  *
  * @copyright Copyright (c) 2013 Ledvinka Vít
  * @author Ledvinka Vít, frosty22 <ledvinka.vit@gmail.com>
+ * @author Filip Procházka <filip@prochazka.su>
  *
  * @ORM\MappedSuperclass()
  *
