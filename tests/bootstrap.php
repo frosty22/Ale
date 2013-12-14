@@ -26,3 +26,4 @@ $_ENV = $_GET = $_POST = array();
 
 
 require __DIR__ . "/../src/Ale/Math.php";
+require __DIR__ . "/../src/Ale/DateInterval.php";

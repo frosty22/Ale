@@ -17,7 +17,12 @@ class DateInterval extends \DateInterval {
 	 */
 	public function getTotalSeconds()
 	{
-		return $this->days * 86400 + $this->h * 3600 + $this->i * 60 + $this->s;
+		return ($this->s)
+		+ ($this->i * 60)
+		+ ($this->h * 60 * 60)
+		+ ($this->d * 60 * 60 * 24)
+		+ ($this->m * 60 * 60 * 24 * 30) 	// Month - usually days count 30
+		+ ($this->y * 60 * 60 * 24 * 365);	// Year - usually days count 365
 	}
 
 
