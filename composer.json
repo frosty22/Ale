@@ -14,11 +14,11 @@
 		"nette/nette": "2.*",
 		"kdyby/doctrine": "*",
 		"flame/modules": "*",
-		"kdyby/bootstrap-form-renderer": "@stable",
 		"voda/date-input": "1.0.*",
 		"frosty22/entity-meta-reader": "*",
 		"kdyby/forms-replicator": "@stable",
-		"kdyby/autowired": "@stable"
+		"kdyby/autowired": "@stable",
+		"frosty22/foundation-form-renderer": "@stable"
 	},
 	"autoload": {
 		"psr-0": {

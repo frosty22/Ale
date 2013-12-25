@@ -3,7 +3,6 @@
 namespace Ale\Application\UI;
 
 use Ale\InvalidCallException;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
 
 /**
  *
@@ -56,7 +55,7 @@ class Form extends \Nette\Application\UI\Form {
 		parent::attached($parent);
 
 		if ($parent instanceof Control) {
-			$this->setRenderer(new BootstrapRenderer(clone $parent->template));
+			$this->setRenderer(new \FoundationFormRenderer\Renderer());
 		}
 	}
 
